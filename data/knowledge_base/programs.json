@@ -1,0 +1,17 @@
+[
+    {
+        "title": "Academic Support Program",
+        "type": "program",
+        "category": "academic",
+        "description": "Free tutoring and academic support for struggling students",
+        "eligibility_criteria": "Students with below 60% marks",
+        "application_process": "Register online or contact program coordinator",
+        "contact_info": {
+            "email": "academic@support.org",
+            "phone": "+91-9876543213"
+        },
+        "location": "Multiple locations",
+        "availability": "available",
+        "tags": ["academic", "tutoring", "support"]
+    }
+]

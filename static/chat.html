@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Women's Education Support</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/chat.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Chat Support</h1>
+            <nav>
+                <a href="/static/index.html">Dashboard</a>
+                <a href="/static/chat.html">Chat</a>
+                <a href="/static/analytics.html">Analytics</a>
+            </nav>
+        </header>
+
+        <main class="chat-container">
+            <div class="chat-window">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <p>Hello! I'm here to help you with your education challenges. How can I assist you today?</p>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Type your message here..." />
+                    <button id="send-button">Send</button>
+                </div>
+            </div>
+
+            <div class="recommendations-panel" id="recommendations-panel">
+                <h3>Recommended Resources</h3>
+                <div id="recommendations-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/chat.js"></script>
+</body>
+</html>

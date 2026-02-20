@@ -1,0 +1,22 @@
+[
+    {
+        "name": "City Girls High School",
+        "code": "CGHS001",
+        "type": "secondary",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "country": "India",
+        "contact_email": "info@cghs.edu.in",
+        "contact_phone": "+91-22-12345678"
+    },
+    {
+        "name": "Women's College",
+        "code": "WC001",
+        "type": "college",
+        "city": "Delhi",
+        "state": "Delhi",
+        "country": "India",
+        "contact_email": "admin@womenscollege.edu.in",
+        "contact_phone": "+91-11-87654321"
+    }
+]
