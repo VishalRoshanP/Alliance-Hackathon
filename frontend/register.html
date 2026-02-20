@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduGuard - Create your account">
+    <title>EduGuard | Register</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body data-page="register">
+
+    <div class="auth-wrapper">
+        <div class="auth-container" style="max-width: 520px;">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="logo-icon">🛡️</div>
+                    <h1>Create Account</h1>
+                    <p>Join EduGuard and empower education</p>
+                </div>
+
+                <form id="register-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="role">I am a</label>
+                        <select id="role">
+                            <option value="student">🎓 Student</option>
+                            <option value="admin">🏫 Authority / Admin</option>
+                            <option value="gov">🏛️ Government / NGO</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="10-digit number">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="you@example.com">
+                    </div>
+
+                    <!-- Student-specific fields -->
+                    <div id="student-fields">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="student-class">Class / Grade</label>
+                                <select id="student-class">
+                                    <option value="">Select class</option>
+                                    <option>8th</option>
+                                    <option>9th</option>
+                                    <option>10th</option>
+                                    <option>11th</option>
+                                    <option>12th</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="school">School / College</label>
+                                <input type="text" id="school" placeholder="Institution name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Authority-specific fields -->
+                    <div id="authority-fields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="institution">Institution Name</label>
+                                <input type="text" id="institution" placeholder="Organization name">
+                            </div>
+                            <div class="form-group">
+                                <label for="designation">Designation</label>
+                                <input type="text" id="designation" placeholder="Your role / title">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Min 6 characters">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" placeholder="Re-enter password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 8px;">Create Account →</button>
+                </form>
+
+                <div class="auth-footer">
+                    Already have an account? <a href="index.html">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

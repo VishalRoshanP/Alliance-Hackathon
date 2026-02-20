@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduGuard Student Dashboard - Track your education journey">
+    <title>EduGuard | Student Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>EduGuard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-target="dashboard-section" onclick="showSection(this)">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a class="nav-item" href="student-profile.html">
+                    <span class="nav-icon">👤</span> My Profile
+                </a>
+                <a class="nav-item" data-target="schemes-section" onclick="showSection(this)">
+                    <span class="nav-icon">🎓</span> Schemes
+                </a>
+                <a class="nav-item" data-target="complaints-section" onclick="showSection(this)">
+                    <span class="nav-icon">📝</span> Complaints
+                    <span class="badge" id="complaint-badge">2</span>
+                </a>
+                <a class="nav-item" data-target="documents-section" onclick="showSection(this)">
+                    <span class="nav-icon">📁</span> Documents
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" onclick="Auth.logout()">
+                    <span class="nav-icon">🚪</span> Logout
+                </a>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <h1>Welcome back, <span id="student-name">Priya</span>! 👋</h1>
+                    <p>Here's your education overview for today</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="section-content active" id="dashboard-section">
+                <!-- Stats -->
+                <div class="stats-grid animate-fade-in-up">
+                    <div class="stat-card purple delay-1">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="attendance-val">82%</div>
+                        <div class="stat-label">Attendance</div>
+                        <div class="stat-trend up">↑ 3% this month</div>
+                    </div>
+                    <div class="stat-card teal delay-2">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value" id="marks-val">76%</div>
+                        <div class="stat-label">Average Marks</div>
+                        <div class="stat-trend up">↑ 5% improvement</div>
+                    </div>
+                    <div class="stat-card amber delay-3">
+                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-value" id="risk-val">Low</div>
+                        <div class="stat-label">Risk Level</div>
+                        <div class="stat-trend up">✓ On track</div>
+                    </div>
+                    <div class="stat-card coral delay-4">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value" id="complaints-val">1</div>
+                        <div class="stat-label">Open Complaints</div>
+                        <div class="stat-trend down">1 pending</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="content-grid">
+                    <div class="content-card animate-fade-in-up delay-3">
+                        <div class="card-header">
+                            <h3>📈 Attendance Trend</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="attendance-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card animate-fade-in-up delay-4">
+                        <div class="card-header">
+                            <h3>📊 Subject-wise Marks</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="marks-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Suggestion Banner -->
+                <div class="content-card animate-fade-in-up delay-5" style="border-left: 3px solid var(--primary-500);">
+                    <div class="card-header">
+                        <h3>🤖 AI Recommendation</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">
+                        Based on your academic performance, you may be eligible for the <strong
+                            style="color: var(--text-accent);">Beti Bachao Beti Padhao</strong> scholarship worth
+                        ₹12,000/year.
+                        Your attendance is good — keep it above 75% to maintain eligibility!
+                        <a href="#" onclick="showSection(document.querySelector('[data-target=schemes-section]'))"
+                            style="font-weight: 600;">View All Schemes →</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Schemes Section -->
+            <div class="section-content" id="schemes-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>🎓 Suggested Scholarships & Schemes</h3>
+                    </div>
+                    <div class="schemes-grid" id="schemes-list"></div>
+                </div>
+            </div>
+
+            <!-- Complaints Section -->
+            <div class="section-content" id="complaints-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📝 My Complaints</h3>
+                        <button class="btn btn-sm btn-primary" onclick="openComplaintModal()">+ New Complaint</button>
+                    </div>
+                    <div id="student-complaints-list"></div>
+                </div>
+            </div>
+
+            <!-- Documents Section -->
+            <div class="section-content" id="documents-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📁 Documents from Authority</h3>
+                    </div>
+                    <div id="documents-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Complaint Modal -->
+    <div class="modal-overlay" id="complaint-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📝 Submit Complaint</h3>
+                <button class="modal-close" onclick="closeComplaintModal()">✕</button>
+            </div>
+            <form id="complaint-form">
+                <div class="form-group">
+                    <label for="complaint-title">Title</label>
+                    <input type="text" id="complaint-title" placeholder="Brief title of your issue">
+                </div>
+                <div class="form-group">
+                    <label for="complaint-category">Category</label>
+                    <select id="complaint-category">
+                        <option value="academic">📚 Academic</option>
+                        <option value="harassment">⚠️ Harassment</option>
+                        <option value="hostel">🏠 Hostel</option>
+                        <option value="general">📋 General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="complaint-desc">Description</label>
+                    <textarea id="complaint-desc" rows="4" placeholder="Describe your issue in detail..."
+                        style="resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/student.js"></script>
+</body>
+
+</html>

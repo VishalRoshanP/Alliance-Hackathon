@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduGuard - Government/NGO Profile">
+    <title>EduGuard | Gov/NGO Profile</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>EduGuard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item" href="gov-dashboard.html">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a class="nav-item" href="gov-dashboard.html">
+                    <span class="nav-icon">🏫</span> Authorities
+                </a>
+                <a class="nav-item" href="gov-dashboard.html">
+                    <span class="nav-icon">👩‍🎓</span> Students
+                </a>
+                <a class="nav-item" href="gov-dashboard.html">
+                    <span class="nav-icon">📋</span> Schemes
+                </a>
+                <a class="nav-item" href="gov-dashboard.html">
+                    <span class="nav-icon">📈</span> Reports
+                </a>
+                <a class="nav-item active">
+                    <span class="nav-icon">👤</span> Profile
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" onclick="Auth.logout()">
+                    <span class="nav-icon">🚪</span> Logout
+                </a>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <h1>My Profile</h1>
+                    <p>Manage your government / NGO profile</p>
+                </div>
+            </div>
+
+            <!-- Profile Hero -->
+            <div class="profile-hero animate-fade-in-up">
+                <div class="profile-avatar" id="profile-avatar">GO</div>
+                <h2 id="profile-name">Gov Officer</h2>
+                <span class="profile-role">🏛️ Government Education Department</span>
+            </div>
+
+            <div class="profile-details-grid">
+                <div class="content-card animate-fade-in-up delay-1">
+                    <div class="card-header">
+                        <h3>📋 Official Information</h3>
+                        <button class="btn btn-sm btn-secondary" id="edit-official-btn"
+                            onclick="toggleEdit('official')">✏️ Edit</button>
+                    </div>
+                    <form id="official-form">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="o-name" value="Shri Arvind Mehta" disabled>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Designation</label>
+                                <input type="text" id="o-designation" value="Director of Education" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Officer ID</label>
+                                <input type="text" id="o-id" value="GOV-EDU-2024-001" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Department</label>
+                            <input type="text" id="o-dept" value="Ministry of Education - Girl Child Welfare" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Region / Jurisdiction</label>
+                            <input type="text" id="o-region" value="National Capital Region (NCR), Delhi" disabled>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="save-official-btn" style="display: none;"
+                            onclick="saveProfile('official')">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="content-card animate-fade-in-up delay-2">
+                    <div class="card-header">
+                        <h3>📞 Contact Information</h3>
+                        <button class="btn btn-sm btn-secondary" id="edit-contact-btn"
+                            onclick="toggleEdit('contact')">✏️ Edit</button>
+                    </div>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label>Official Email</label>
+                            <input type="email" id="c-email" value="arvind.mehta@gov.edu.in" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="c-phone" value="9911223344" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Office Address</label>
+                            <input type="text" id="c-office" value="Shastri Bhawan, New Delhi - 110001" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Office Landline</label>
+                            <input type="tel" id="c-landline" value="011-23382451" disabled>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="save-contact-btn" style="display: none;"
+                            onclick="saveProfile('contact')">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="content-card animate-fade-in-up delay-3">
+                    <div class="card-header">
+                        <h3>📊 Oversight Summary</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="stat-card purple" style="margin: 0;">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Institutions</div>
+                        </div>
+                        <div class="stat-card teal" style="margin: 0;">
+                            <div class="stat-value">1,585</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                        <div class="stat-card amber" style="margin: 0;">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label">Active Schemes</div>
+                        </div>
+                        <div class="stat-card coral" style="margin: 0;">
+                            <div class="stat-value">₹2.4Cr</div>
+                            <div class="stat-label">Total Aid Disbursed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card animate-fade-in-up delay-4">
+                    <div class="card-header">
+                        <h3>🔐 Security Settings</h3>
+                    </div>
+                    <form>
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" placeholder="Confirm new password">
+                        </div>
+                        <button type="button" class="btn btn-primary"
+                            onclick="Toast.show('Password updated successfully!', 'success')">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        if (!Auth.requireAuth(['gov'])) { }
+
+        const user = Auth.getUser();
+        if (user && user.name) {
+            document.getElementById('profile-name').textContent = user.name;
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('profile-avatar').textContent = initials;
+        }
+
+        function toggleEdit(section) {
+            const form = document.getElementById(section + '-form');
+            const inputs = form.querySelectorAll('input');
+            const saveBtn = document.getElementById('save-' + section + '-btn');
+            const editBtn = document.getElementById('edit-' + section + '-btn');
+            const isDisabled = inputs[0].disabled;
+            inputs.forEach(inp => inp.disabled = !isDisabled);
+            saveBtn.style.display = isDisabled ? 'flex' : 'none';
+            editBtn.innerHTML = isDisabled ? '❌ Cancel' : '✏️ Edit';
+        }
+
+        function saveProfile(section) {
+            Toast.show('Profile updated successfully!', 'success');
+            toggleEdit(section);
+        }
+    </script>
+</body>
+
+</html>

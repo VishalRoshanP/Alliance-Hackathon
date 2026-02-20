@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduGuard Government/NGO Dashboard - Oversee education initiatives">
+    <title>EduGuard | Government / NGO Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>EduGuard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-target="dashboard-section" onclick="showGovSection(this)">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a class="nav-item" data-target="authorities-section" onclick="showGovSection(this)">
+                    <span class="nav-icon">🏫</span> Authorities
+                </a>
+                <a class="nav-item" data-target="students-section" onclick="showGovSection(this)">
+                    <span class="nav-icon">👩‍🎓</span> Students
+                </a>
+                <a class="nav-item" data-target="schemes-section" onclick="showGovSection(this)">
+                    <span class="nav-icon">📋</span> Schemes
+                </a>
+                <a class="nav-item" data-target="reports-section" onclick="showGovSection(this)">
+                    <span class="nav-icon">📈</span> Reports
+                </a>
+                <a class="nav-item" href="gov-profile.html">
+                    <span class="nav-icon">👤</span> Profile
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" onclick="Auth.logout()">
+                    <span class="nav-icon">🚪</span> Logout
+                </a>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <h1>Government / NGO Dashboard</h1>
+                    <p>Oversee institutions and manage education schemes</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="section-content active" id="dashboard-section">
+                <div class="stats-grid animate-fade-in-up">
+                    <div class="stat-card purple delay-1">
+                        <div class="stat-icon">🏫</div>
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Total Authorities</div>
+                    </div>
+                    <div class="stat-card teal delay-2">
+                        <div class="stat-icon">👩‍🎓</div>
+                        <div class="stat-value">1,585</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card danger delay-3">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-value" id="dropout-risk-count">3</div>
+                        <div class="stat-label">Dropout Risk</div>
+                    </div>
+                    <div class="stat-card amber delay-4">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Active Schemes</div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="content-card animate-fade-in-up delay-3">
+                        <div class="card-header">
+                            <h3>📊 Institution-wise Student Count</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="institution-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card animate-fade-in-up delay-4">
+                        <div class="card-header">
+                            <h3>🛡️ Overall Risk Distribution</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="gov-risk-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Alerts -->
+                <div class="content-card animate-fade-in-up delay-5" style="border-left: 3px solid var(--accent-rose);">
+                    <div class="card-header">
+                        <h3>🚨 Dropout Risk Summary</h3>
+                    </div>
+                    <div id="gov-alerts"></div>
+                </div>
+            </div>
+
+            <!-- Authorities Section -->
+            <div class="section-content" id="authorities-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>🏫 Registered Authorities</h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="authorities-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Institution</th>
+                                    <th>Role</th>
+                                    <th>Students</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody id="authorities-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Overview Section -->
+            <div class="section-content" id="students-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>👩‍🎓 Student Status Overview (All Institutions)</h3>
+                        <div class="section-tabs">
+                            <button class="section-tab active" onclick="filterGovStudents('all', this)">All</button>
+                            <button class="section-tab" onclick="filterGovStudents('critical', this)">🔴
+                                Critical</button>
+                            <button class="section-tab" onclick="filterGovStudents('high', this)">🟠 High Risk</button>
+                            <button class="section-tab" onclick="filterGovStudents('low', this)">🟢 Safe</button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Attendance</th>
+                                    <th>Marks</th>
+                                    <th>Fees</th>
+                                    <th>Risk</th>
+                                    <th>Behavior</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gov-students-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schemes Section -->
+            <div class="section-content" id="schemes-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📋 Manage Schemes</h3>
+                        <button class="btn btn-sm btn-primary" onclick="openSchemeModal()">+ New Scheme</button>
+                    </div>
+                    <div class="schemes-grid" id="gov-schemes-list"></div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="section-content" id="reports-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📈 Dropout Risk Report</h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Institution</th>
+                                    <th>Risk Level</th>
+                                    <th>Attendance</th>
+                                    <th>Marks</th>
+                                    <th>Fees</th>
+                                    <th>Recommendation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-grid" style="margin-top: 24px;">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>📉 Attendance Trends (All Institutions)</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trend-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>🎯 Scheme Utilization</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="scheme-util-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Scheme Modal -->
+    <div class="modal-overlay" id="scheme-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📋 Add New Scheme</h3>
+                <button class="modal-close" onclick="closeSchemeModal()">✕</button>
+            </div>
+            <form id="scheme-form">
+                <div class="form-group">
+                    <label>Scheme Name</label>
+                    <input type="text" id="scheme-name" placeholder="E.g. Girls Education Support Fund">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="scheme-category">
+                        <option value="Government">🏛️ Government</option>
+                        <option value="Academic">📚 Academic</option>
+                        <option value="Technical">💻 Technical</option>
+                        <option value="NGO">🤝 NGO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="scheme-desc" rows="3" placeholder="What does this scheme offer..."
+                        style="resize: vertical;"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Amount / Benefit</label>
+                        <input type="text" id="scheme-amount" placeholder="E.g. ₹15,000/year">
+                    </div>
+                    <div class="form-group">
+                        <label>Deadline</label>
+                        <input type="date" id="scheme-deadline">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Eligibility</label>
+                    <input type="text" id="scheme-eligibility" placeholder="Who can apply...">
+                </div>
+                <button type="submit" class="btn btn-primary">Publish & Broadcast →</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/gov.js"></script>
+</body>
+
+</html>

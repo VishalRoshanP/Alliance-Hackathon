@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduGuard Authority Dashboard - Monitor students and manage campus">
+    <title>EduGuard | Authority Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>EduGuard</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-target="dashboard-section" onclick="showAdminSection(this)">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a class="nav-item" data-target="students-section" onclick="showAdminSection(this)">
+                    <span class="nav-icon">👩‍🎓</span> Students
+                </a>
+                <a class="nav-item" data-target="upload-section" onclick="showAdminSection(this)">
+                    <span class="nav-icon">📁</span> Documents
+                </a>
+                <a class="nav-item" data-target="attendance-section" onclick="showAdminSection(this)">
+                    <span class="nav-icon">📋</span> Attendance
+                </a>
+                <a class="nav-item" data-target="complaints-section" onclick="showAdminSection(this)">
+                    <span class="nav-icon">📝</span> Complaints
+                    <span class="badge">3</span>
+                </a>
+                <a class="nav-item" data-target="alerts-section" onclick="showAdminSection(this)">
+                    <span class="nav-icon">🔔</span> Alerts
+                    <span class="badge">2</span>
+                </a>
+                <a class="nav-item" href="admin-profile.html">
+                    <span class="nav-icon">👤</span> Profile
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" onclick="Auth.logout()">
+                    <span class="nav-icon">🚪</span> Logout
+                </a>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <h1>Authority Dashboard</h1>
+                    <p>Monitor students and manage campus operations</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search students..." id="student-search"
+                            oninput="filterStudents()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div class="section-content active" id="dashboard-section">
+                <div class="stats-grid animate-fade-in-up">
+                    <div class="stat-card purple delay-1">
+                        <div class="stat-icon">👩‍🎓</div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card danger delay-2">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-value" id="at-risk-count">3</div>
+                        <div class="stat-label">At-Risk Students</div>
+                    </div>
+                    <div class="stat-card teal delay-3">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="avg-attendance">72%</div>
+                        <div class="stat-label">Avg. Attendance</div>
+                    </div>
+                    <div class="stat-card amber delay-4">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Open Complaints</div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="content-card animate-fade-in-up delay-3">
+                        <div class="card-header">
+                            <h3>📊 Attendance Distribution</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="admin-attendance-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card animate-fade-in-up delay-4">
+                        <div class="card-header">
+                            <h3>🛡️ Risk Breakdown</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="risk-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts on dashboard -->
+                <div id="dashboard-alerts"></div>
+            </div>
+
+            <!-- Students Section -->
+            <div class="section-content" id="students-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>👩‍🎓 Student Roster</h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="student-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Attendance</th>
+                                    <th>Marks</th>
+                                    <th>Fees</th>
+                                    <th>Risk Level</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="section-content" id="upload-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📁 Upload Documents</h3>
+                    </div>
+                    <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+                        <div class="upload-icon">📤</div>
+                        <h3>Drag & drop files here</h3>
+                        <p>or click to browse • PDF, DOCX, PNG, JPG (max 10MB)</p>
+                        <input type="file" id="file-input" accept=".pdf,.docx,.png,.jpg" multiple
+                            style="display: none;">
+                    </div>
+                    <div class="file-list" id="uploaded-files"></div>
+                </div>
+
+                <div class="content-card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <h3>📄 Uploaded Documents</h3>
+                    </div>
+                    <div id="existing-docs"></div>
+                </div>
+            </div>
+
+            <!-- Attendance Section -->
+            <div class="section-content" id="attendance-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📋 Student Attendance</h3>
+                        <span class="badge-status danger">⚠️ Students below 70% highlighted</span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Attendance %</th>
+                                    <th>Status</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complaints Section -->
+            <div class="section-content" id="complaints-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>📝 All Complaints</h3>
+                        <div class="section-tabs">
+                            <button class="section-tab active" onclick="filterComplaints('all', this)">All</button>
+                            <button class="section-tab" onclick="filterComplaints('high', this)">🔴 High</button>
+                            <button class="section-tab" onclick="filterComplaints('pending', this)">🟡 Pending</button>
+                            <button class="section-tab" onclick="filterComplaints('resolved', this)">🟢
+                                Resolved</button>
+                        </div>
+                    </div>
+                    <div id="admin-complaints-list"></div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div class="section-content" id="alerts-section">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>🔔 Auto-Generated Alerts</h3>
+                    </div>
+                    <div id="alerts-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div class="modal-overlay" id="student-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-student-name">Student Details</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('student-modal').classList.remove('open')">✕</button>
+            </div>
+            <div id="modal-student-body"></div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

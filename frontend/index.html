@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EduGuard - AI-Powered Smart Campus Support System to prevent girl student dropout">
+  <title>EduGuard | Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="login">
+
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <div class="auth-card">
+        <!-- Logo -->
+        <div class="auth-logo">
+          <div class="logo-icon">🛡️</div>
+          <h1>EduGuard</h1>
+          <p>AI-Powered Smart Campus Support</p>
+        </div>
+
+        <!-- Role Tabs -->
+        <div class="role-tabs">
+          <button class="role-tab active" data-role="student">🎓 Student</button>
+          <button class="role-tab" data-role="admin">🏫 Authority</button>
+          <button class="role-tab" data-role="gov">🏛️ Gov/NGO</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" autocomplete="off">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email" autocomplete="email">
+            <span class="input-icon">📧</span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+            <span class="input-icon">🔒</span>
+          </div>
+
+          <div class="form-options">
+            <label>
+              <input type="checkbox" id="remember"> Remember me
+            </label>
+            <a href="forgot-password.html">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Sign In →</button>
+        </form>
+
+        <div class="auth-footer">
+          Don't have an account? <a href="register.html">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
