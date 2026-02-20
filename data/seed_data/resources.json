@@ -1,0 +1,17 @@
+[
+    {
+        "title": "State Women's Education Scholarship",
+        "type": "scholarship",
+        "category": "financial",
+        "description": "Government scholarship for women pursuing higher education",
+        "eligibility_criteria": "Female students, family income below ₹5 lakhs, minimum 60% marks",
+        "application_process": "Apply online through state education portal",
+        "contact_info": {
+            "email": "scholarship@state.gov.in",
+            "phone": "1800-123-4567"
+        },
+        "location": "All states",
+        "availability": "available",
+        "tags": ["scholarship", "government", "financial"]
+    }
+]

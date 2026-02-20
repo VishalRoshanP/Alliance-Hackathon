@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women's Education Dropout Prevention System</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Women's Education Dropout Prevention System</h1>
+            <nav>
+                <a href="/static/index.html">Dashboard</a>
+                <a href="/static/chat.html">Chat</a>
+                <a href="E:\projects\drop out solution\static\analytics.html">Analytics</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="dashboard">
+                <h2>Dashboard Overview</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Students</h3>
+                        <p id="total-students">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>At Risk Students</h3>
+                        <p id="at-risk-students">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Conversations</h3>
+                        <p id="active-conversations">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Interventions</h3>
+                        <p id="interventions">-</p>
+                    </div>
+                </div>
+
+                <div class="risk-distribution">
+                    <h3>Risk Distribution</h3>
+                    <div id="risk-chart"></div>
+                </div>
+
+                <div class="recent-activities">
+                    <h3>Recent Activities</h3>
+                    <div id="activities-list"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

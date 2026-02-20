@@ -1,0 +1,750 @@
+# Technical Structure: Women's Education Dropout Prevention System
+
+## Project Structure
+
+```
+women-education-system/
+├── .env                          # Environment variables (API keys, config)
+├── .gitignore                    # Git ignore rules
+├── requirements.txt              # Python dependencies
+├── README.md                     # Project documentation
+├── STRUCTURE.md                  # This file
+│
+├── main.py                       # FastAPI application entry point
+├── config.py                     # Configuration management
+│
+├── api/                          # API routes
+│   ├── __init__.py
+│   ├── chat.py                   # Chatbot endpoints
+│   ├── analytics.py              # Data analysis endpoints
+│   ├── students.py               # Student management endpoints
+│   ├── schools.py                # School management endpoints
+│   ├── resources.py              # Resource database endpoints
+│   └── interventions.py          # Intervention tracking endpoints
+│
+├── core/                         # Core business logic
+│   ├── __init__.py
+│   ├── chatbot.py                # Chatbot AI engine
+│   ├── risk_analyzer.py          # Risk scoring and prediction
+│   ├── solution_engine.py        # Solution recommendation engine
+│   ├── nlp_processor.py          # NLP for understanding student messages
+│   └── knowledge_base.py         # Knowledge base search
+│
+├── models/                       # Database models
+│   ├── __init__.py
+│   ├── database.py               # Database connection & setup
+│   ├── student.py                # Student model
+│   ├── school.py                 # School model
+│   ├── conversation.py           # Chat conversation model
+│   ├── risk_assessment.py        # Risk assessment model
+│   ├── intervention.py           # Intervention tracking model
+│   └── resource.py               # Resource database model
+│
+├── services/                     # Service layer
+│   ├── __init__.py
+│   ├── llm_service.py            # LLM API integration (OpenAI/Groq/Ollama)
+│   ├── notification_service.py   # Email/SMS notifications
+│   ├── file_upload_service.py    # File upload handling
+│   ├── export_service.py         # Data export (reports, CSV)
+│   └── integration_service.py    # External system integrations
+│
+├── utils/                        # Utility functions
+│   ├── __init__.py
+│   ├── validators.py             # Data validation
+│   ├── formatters.py             # Data formatting
+│   ├── encryption.py             # Data encryption utilities
+│   ├── logger.py                 # Logging configuration
+│   └── constants.py              # Constants and enums
+│
+├── static/                       # Frontend static files
+│   ├── index.html                # Main dashboard
+│   ├── chat.html                 # Chatbot interface
+│   ├── analytics.html            # Analytics dashboard
+│   ├── css/
+│   │   ├── main.css
+│   │   └── chat.css
+│   ├── js/
+│   │   ├── main.js
+│   │   ├── chat.js
+│   │   ├── analytics.js
+│   │   └── api.js
+│   └── assets/
+│       └── images/
+│
+├── templates/                    # HTML templates (if using server-side rendering)
+│   ├── base.html
+│   ├── dashboard.html
+│   └── reports.html
+│
+├── data/                         # Data files
+│   ├── knowledge_base/           # Knowledge base files
+│   │   ├── scholarships.json
+│   │   ├── resources.json
+│   │   ├── programs.json
+│   │   └── success_stories.json
+│   ├── ml_models/                # Trained ML models (if any)
+│   │   └── risk_prediction.pkl
+│   └── seed_data/                # Initial seed data
+│       ├── resources.json
+│       └── sample_schools.json
+│
+├── tests/                        # Test files
+│   ├── __init__.py
+│   ├── test_chatbot.py
+│   ├── test_risk_analyzer.py
+│   ├── test_api.py
+│   └── test_database.py
+│
+├── scripts/                      # Utility scripts
+│   ├── seed_database.py          # Seed initial data
+│   ├── import_resources.py       # Import resources from CSV/JSON
+│   ├── export_data.py            # Export data for analysis
+│   └── backup_database.py       # Database backup script
+│
+├── migrations/                   # Database migrations (if using Alembic)
+│   └── versions/
+│
+└── docs/                         # Documentation
+    ├── API.md                    # API documentation
+    ├── DEPLOYMENT.md             # Deployment guide
+    └── ARCHITECTURE.md           # Architecture details
+```
+
+---
+
+## Database Schema
+
+### Tables
+
+#### 1. `students`
+```sql
+CREATE TABLE students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id VARCHAR(50) UNIQUE NOT NULL,  -- School-provided ID
+    name VARCHAR(200) NOT NULL,
+    age INTEGER,
+    gender VARCHAR(10),
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    address TEXT,
+    school_id INTEGER REFERENCES schools(id),
+    grade_level VARCHAR(50),
+    enrollment_date DATE,
+    status VARCHAR(20) DEFAULT 'active',  -- active, at_risk, dropped_out, graduated
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 2. `schools`
+```sql
+CREATE TABLE schools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(200) NOT NULL,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    type VARCHAR(50),  -- primary, secondary, college
+    address TEXT,
+    city VARCHAR(100),
+    state VARCHAR(100),
+    country VARCHAR(100) DEFAULT 'India',
+    contact_email VARCHAR(255),
+    contact_phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 3. `attendance_records`
+```sql
+CREATE TABLE attendance_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    date DATE NOT NULL,
+    status VARCHAR(20) NOT NULL,  -- present, absent, late, excused
+    reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(student_id, date)
+);
+```
+
+#### 4. `fee_records`
+```sql
+CREATE TABLE fee_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    amount_due DECIMAL(10, 2) NOT NULL,
+    amount_paid DECIMAL(10, 2) DEFAULT 0,
+    due_date DATE,
+    status VARCHAR(20) DEFAULT 'pending',  -- pending, partial, paid, overdue
+    months_overdue INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 5. `health_records`
+```sql
+CREATE TABLE health_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    issue_type VARCHAR(100),  -- chronic, acute, mental_health
+    description TEXT,
+    severity VARCHAR(20),  -- low, medium, high, critical
+    affects_attendance BOOLEAN DEFAULT FALSE,
+    reported_date DATE,
+    resolved_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 6. `academic_records`
+```sql
+CREATE TABLE academic_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    semester VARCHAR(50),
+    subject VARCHAR(100),
+    grade DECIMAL(5, 2),
+    percentage DECIMAL(5, 2),
+    exam_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 7. `conversations` (Chatbot conversations)
+```sql
+CREATE TABLE conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    session_id VARCHAR(100) UNIQUE NOT NULL,
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ended_at TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'active',  -- active, resolved, escalated
+    language VARCHAR(10) DEFAULT 'en',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 8. `messages` (Chat messages)
+```sql
+CREATE TABLE messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    conversation_id INTEGER REFERENCES conversations(id),
+    role VARCHAR(20) NOT NULL,  -- user, assistant, system
+    content TEXT NOT NULL,
+    problem_category VARCHAR(100),  -- financial, family, health, etc.
+    severity VARCHAR(20),
+    sentiment VARCHAR(20),  -- positive, neutral, negative
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 9. `risk_assessments`
+```sql
+CREATE TABLE risk_assessments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    risk_score DECIMAL(5, 2) NOT NULL,  -- 0-100
+    risk_level VARCHAR(20) NOT NULL,  -- low, medium, high, critical
+    factors JSON,  -- JSON object with risk factors and scores
+    calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 10. `interventions`
+```sql
+CREATE TABLE interventions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    risk_assessment_id INTEGER REFERENCES risk_assessments(id),
+    type VARCHAR(50) NOT NULL,  -- financial_aid, counseling, academic_support, etc.
+    status VARCHAR(20) DEFAULT 'pending',  -- pending, in_progress, completed, cancelled
+    recommended_resources JSON,  -- Array of resource IDs
+    action_plan TEXT,
+    assigned_to INTEGER,  -- Counselor/admin ID
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    outcome TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 11. `resources` (Knowledge base)
+```sql
+CREATE TABLE resources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(200) NOT NULL,
+    type VARCHAR(50) NOT NULL,  -- scholarship, program, organization, legal, etc.
+    category VARCHAR(100),  -- financial, health, legal, academic
+    description TEXT,
+    eligibility_criteria TEXT,
+    application_process TEXT,
+    contact_info JSON,  -- {email, phone, website, address}
+    location VARCHAR(200),
+    availability VARCHAR(20),  -- available, limited, closed
+    tags JSON,  -- Array of tags for search
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 12. `resource_recommendations`
+```sql
+CREATE TABLE resource_recommendations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER REFERENCES students(id),
+    conversation_id INTEGER REFERENCES conversations(id),
+    resource_id INTEGER REFERENCES resources(id),
+    recommended_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    student_viewed BOOLEAN DEFAULT FALSE,
+    student_applied BOOLEAN DEFAULT FALSE,
+    outcome VARCHAR(50)  -- applied, accepted, rejected, pending
+);
+```
+
+---
+
+## API Endpoints Structure
+
+### Chatbot Endpoints (`/api/chat`)
+
+```
+POST   /api/chat/start              # Start new conversation
+POST   /api/chat/message            # Send message, get AI response
+GET    /api/chat/conversations      # List user's conversations
+GET    /api/chat/conversations/{id} # Get conversation history
+DELETE /api/chat/conversations/{id} # Delete conversation
+POST   /api/chat/escalate           # Escalate to human counselor
+```
+
+### Analytics Endpoints (`/api/analytics`)
+
+```
+POST   /api/analytics/upload-data   # Upload school data (CSV/JSON)
+POST   /api/analytics/calculate-risk # Calculate risk for student(s)
+GET    /api/analytics/risk-scores   # Get risk scores (with filters)
+GET    /api/analytics/trends        # Get dropout trends
+GET    /api/analytics/dashboard     # Dashboard summary data
+POST   /api/analytics/batch-process # Process multiple students
+```
+
+### Student Endpoints (`/api/students`)
+
+```
+GET    /api/students                # List students (with filters)
+GET    /api/students/{id}           # Get student details
+POST   /api/students                # Create student
+PUT    /api/students/{id}           # Update student
+DELETE /api/students/{id}           # Delete student
+GET    /api/students/{id}/risk      # Get student's risk assessment
+GET    /api/students/{id}/history   # Get student's full history
+```
+
+### School Endpoints (`/api/schools`)
+
+```
+GET    /api/schools                 # List schools
+GET    /api/schools/{id}           # Get school details
+POST   /api/schools                # Register school
+PUT    /api/schools/{id}           # Update school
+GET    /api/schools/{id}/students  # Get school's students
+GET    /api/schools/{id}/stats     # Get school statistics
+```
+
+### Resource Endpoints (`/api/resources`)
+
+```
+GET    /api/resources               # List resources (with filters)
+GET    /api/resources/{id}         # Get resource details
+POST   /api/resources              # Add resource (admin)
+PUT    /api/resources/{id}         # Update resource
+DELETE /api/resources/{id}          # Delete resource
+GET    /api/resources/search       # Search resources
+GET    /api/resources/recommend    # Get recommendations for student
+```
+
+### Intervention Endpoints (`/api/interventions`)
+
+```
+GET    /api/interventions           # List interventions
+GET    /api/interventions/{id}     # Get intervention details
+POST   /api/interventions          # Create intervention
+PUT    /api/interventions/{id}     # Update intervention
+GET    /api/interventions/student/{student_id} # Get student's interventions
+POST   /api/interventions/{id}/complete # Mark intervention complete
+```
+
+---
+
+## Core Components
+
+### 1. `main.py` - Application Entry Point
+
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from api import chat, analytics, students, schools, resources, interventions
+from models.database import init_db
+from config import settings
+
+app = FastAPI(title="Women's Education Dropout Prevention System")
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
+app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"])
+app.include_router(students.router, prefix="/api/students", tags=["students"])
+app.include_router(schools.router, prefix="/api/schools", tags=["schools"])
+app.include_router(resources.router, prefix="/api/resources", tags=["resources"])
+app.include_router(interventions.router, prefix="/api/interventions", tags=["interventions"])
+
+@app.on_event("startup")
+async def startup():
+    init_db()
+    print("Database initialized")
+
+@app.get("/")
+async def root():
+    return {"message": "Women's Education Dropout Prevention API"}
+```
+
+### 2. `core/chatbot.py` - Chatbot Engine
+
+**Responsibilities:**
+- Process user messages
+- Understand problem context
+- Generate empathetic responses
+- Search knowledge base
+- Recommend resources
+- Escalate critical cases
+
+**Key Functions:**
+```python
+async def process_message(session_id: str, message: str, student_id: int = None)
+async def understand_problem(message: str) -> dict
+async def generate_response(context: dict, problem: dict) -> str
+async def search_resources(problem_category: str, location: str = None) -> list
+async def should_escalate(problem: dict) -> bool
+```
+
+### 3. `core/risk_analyzer.py` - Risk Analysis Engine
+
+**Responsibilities:**
+- Calculate dropout risk scores
+- Analyze attendance patterns
+- Assess financial stress
+- Evaluate academic performance
+- Identify health-related risks
+- Generate risk reports
+
+**Key Functions:**
+```python
+def calculate_risk_score(student_id: int) -> dict
+def analyze_attendance(student_id: int) -> dict
+def analyze_financial_stress(student_id: int) -> dict
+def analyze_academic_performance(student_id: int) -> dict
+def analyze_health_issues(student_id: int) -> dict
+def predict_dropout_probability(student_id: int, timeframe_days: int = 180) -> float
+```
+
+### 4. `core/solution_engine.py` - Solution Recommendation
+
+**Responsibilities:**
+- Match problems with solutions
+- Filter resources by eligibility
+- Generate action plans
+- Prioritize recommendations
+
+**Key Functions:**
+```python
+def recommend_solutions(problem: dict, student_context: dict) -> list
+def filter_by_eligibility(resources: list, student: dict) -> list
+def generate_action_plan(solutions: list) -> dict
+def prioritize_recommendations(recommendations: list) -> list
+```
+
+### 5. `services/llm_service.py` - LLM Integration
+
+**Responsibilities:**
+- Interface with LLM APIs (OpenAI/Groq/Ollama)
+- Handle API calls and errors
+- Manage rate limiting
+- Cache responses
+
+**Key Functions:**
+```python
+async def chat_completion(messages: list, system_prompt: str = None) -> str
+async def analyze_text(text: str, task: str) -> dict
+def get_client() -> OpenAI
+```
+
+---
+
+## Technology Stack
+
+### Backend
+- **Framework**: FastAPI (Python)
+- **Database**: SQLite (development) / PostgreSQL (production)
+- **ORM**: SQLAlchemy (optional) or raw SQL
+- **LLM**: OpenAI GPT-4 / Groq / Ollama
+- **NLP**: spaCy / NLTK (for text processing)
+- **ML**: scikit-learn (for risk prediction models)
+
+### Frontend
+- **Framework**: Vanilla JavaScript / React / Vue.js
+- **Styling**: CSS3 / Tailwind CSS
+- **Charts**: Chart.js / D3.js (for analytics dashboard)
+
+### Infrastructure
+- **Server**: Uvicorn / Gunicorn
+- **Deployment**: Docker / Cloud (AWS/GCP/Azure)
+- **Monitoring**: Logging, error tracking
+
+---
+
+## Implementation Phases
+
+### Phase 1: Foundation (Weeks 1-2)
+- [ ] Set up project structure
+- [ ] Create database schema
+- [ ] Implement basic API endpoints
+- [ ] Set up LLM service
+- [ ] Create simple chatbot interface
+
+### Phase 2: Core Features (Weeks 3-4)
+- [ ] Implement chatbot logic
+- [ ] Build risk analyzer
+- [ ] Create knowledge base system
+- [ ] Add resource recommendation engine
+- [ ] Build data upload functionality
+
+### Phase 3: Analytics (Weeks 5-6)
+- [ ] Implement risk scoring algorithm
+- [ ] Build analytics dashboard
+- [ ] Add data visualization
+- [ ] Create reporting system
+- [ ] Implement early warning system
+
+### Phase 4: Integration & Polish (Weeks 7-8)
+- [ ] Add notification system
+- [ ] Implement intervention tracking
+- [ ] Build admin dashboard
+- [ ] Add multi-language support
+- [ ] Security hardening
+- [ ] Performance optimization
+
+### Phase 5: Testing & Deployment (Weeks 9-10)
+- [ ] Write unit tests
+- [ ] Integration testing
+- [ ] User acceptance testing
+- [ ] Deploy to staging
+- [ ] Production deployment
+- [ ] Documentation
+
+---
+
+## Key Files Breakdown
+
+### `api/chat.py`
+```python
+from fastapi import APIRouter, HTTPException
+from core.chatbot import process_message, start_conversation
+from models.conversation import save_message, get_conversation
+
+router = APIRouter()
+
+@router.post("/start")
+async def start_chat(student_id: int = None):
+    # Start new conversation
+    session_id = await start_conversation(student_id)
+    return {"session_id": session_id}
+
+@router.post("/message")
+async def send_message(session_id: str, message: str):
+    # Process message and get AI response
+    response = await process_message(session_id, message)
+    return {"response": response}
+```
+
+### `core/risk_analyzer.py`
+```python
+def calculate_risk_score(student_id: int) -> dict:
+    """
+    Calculate comprehensive risk score for a student
+    Returns: {
+        'risk_score': 0-100,
+        'risk_level': 'low'|'medium'|'high'|'critical',
+        'factors': {
+            'attendance': {...},
+            'financial': {...},
+            'academic': {...},
+            'health': {...}
+        }
+    }
+    """
+    attendance_score = analyze_attendance(student_id)
+    financial_score = analyze_financial_stress(student_id)
+    academic_score = analyze_academic_performance(student_id)
+    health_score = analyze_health_issues(student_id)
+    
+    # Weighted calculation
+    risk_score = (
+        attendance_score['score'] * 0.25 +
+        financial_score['score'] * 0.20 +
+        academic_score['score'] * 0.20 +
+        health_score['score'] * 0.15 +
+        # ... other factors
+    )
+    
+    return {
+        'risk_score': risk_score,
+        'risk_level': determine_risk_level(risk_score),
+        'factors': {
+            'attendance': attendance_score,
+            'financial': financial_score,
+            'academic': academic_score,
+            'health': health_score
+        }
+    }
+```
+
+### `models/database.py`
+```python
+import sqlite3
+from contextlib import contextmanager
+
+DB_PATH = "women_education.db"
+
+@contextmanager
+def get_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+def init_db():
+    """Initialize database with all tables"""
+    with get_connection() as conn:
+        # Create all tables
+        conn.executescript("""
+            CREATE TABLE IF NOT EXISTS students (...);
+            CREATE TABLE IF NOT EXISTS schools (...);
+            CREATE TABLE IF NOT EXISTS attendance_records (...);
+            -- ... all other tables
+        """)
+```
+
+---
+
+## Environment Variables (.env)
+
+```bash
+# LLM Configuration
+LLM_PROVIDER=groq  # groq, openai, ollama
+GROQ_API_KEY=your_groq_key
+OPENAI_API_KEY=your_openai_key
+OLLAMA_BASE_URL=http://localhost:11434
+
+# Database
+DATABASE_URL=sqlite:///women_education.db
+# For production: DATABASE_URL=postgresql://user:pass@localhost/dbname
+
+# Application
+DEBUG=True
+SECRET_KEY=your_secret_key
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000
+
+# Notifications
+SMS_PROVIDER=twilio  # or other
+TWILIO_ACCOUNT_SID=your_sid
+TWILIO_AUTH_TOKEN=your_token
+EMAIL_SMTP_HOST=smtp.gmail.com
+EMAIL_SMTP_PORT=587
+EMAIL_USER=your_email
+EMAIL_PASSWORD=your_password
+
+# File Upload
+MAX_UPLOAD_SIZE=10485760  # 10MB
+UPLOAD_DIR=uploads
+```
+
+---
+
+## Dependencies (requirements.txt)
+
+```txt
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.23
+alembic==1.12.1  # For migrations
+
+# LLM
+openai==1.3.5
+groq==0.3.0  # If using Groq
+
+# Data Processing
+pandas==2.1.3
+numpy==1.26.2
+
+# NLP
+spacy==3.7.2
+nltk==3.8.1
+
+# ML
+scikit-learn==1.3.2
+
+# Utilities
+python-dotenv==1.0.0
+pydantic==2.5.0
+python-jose[cryptography]==3.3.0  # For JWT if needed
+passlib[bcrypt]==1.7.4  # For password hashing if needed
+
+# Notifications
+twilio==8.10.0  # For SMS
+emails==0.6  # For email
+
+# File Handling
+python-magic==0.4.27
+openpyxl==3.1.2  # For Excel file handling
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2  # For testing FastAPI
+```
+
+---
+
+## Next Steps
+
+1. **Create project structure**: Set up folders and files
+2. **Initialize database**: Create schema and seed data
+3. **Implement core chatbot**: Basic chat functionality
+4. **Build risk analyzer**: Calculate risk scores
+5. **Create knowledge base**: Add resources and solutions
+6. **Build frontend**: Chat interface and dashboard
+7. **Add analytics**: Data visualization and reports
+8. **Test and deploy**: Testing and production setup
+
+---
+
+*This structure provides a solid foundation for building the Women's Education Dropout Prevention System. Start with Phase 1 and iterate based on feedback.*

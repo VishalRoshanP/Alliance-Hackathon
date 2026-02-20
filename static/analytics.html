@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Women's Education System</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Analytics Dashboard</h1>
+            <nav>
+                <a href="/static/index.html">Dashboard</a>
+                <a href="/static/chat.html">Chat</a>
+                <a href="/static/analytics.html">Analytics</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="analytics-section">
+                <h2>Data Upload</h2>
+                <div class="upload-section">
+                    <input type="file" id="data-file" accept=".csv,.xlsx,.xls" />
+                    <button id="upload-button">Upload Student Data</button>
+                    <div id="upload-status"></div>
+                </div>
+
+                <h2>Risk Analysis</h2>
+                <div class="filters">
+                    <select id="school-filter">
+                        <option value="">All Schools</option>
+                    </select>
+                    <select id="risk-level-filter">
+                        <option value="">All Risk Levels</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                    <button id="filter-button">Apply Filters</button>
+                </div>
+
+                <div class="risk-scores-table">
+                    <table id="risk-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Risk Score</th>
+                                <th>Risk Level</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="risk-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/analytics.js"></script>
+</body>
+</html>

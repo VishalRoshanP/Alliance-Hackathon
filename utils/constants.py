@@ -1,0 +1,111 @@
+"""Constants and enums for the application."""
+
+# Risk Levels
+RISK_LOW = "low"
+RISK_MEDIUM = "medium"
+RISK_HIGH = "high"
+RISK_CRITICAL = "critical"
+
+RISK_LEVELS = [RISK_LOW, RISK_MEDIUM, RISK_HIGH, RISK_CRITICAL]
+
+# Risk Score Thresholds
+RISK_SCORE_LOW = 30
+RISK_SCORE_MEDIUM = 60
+RISK_SCORE_HIGH = 80
+RISK_SCORE_CRITICAL = 100
+
+# Student Status
+STATUS_ACTIVE = "active"
+STATUS_AT_RISK = "at_risk"
+STATUS_DROPPED_OUT = "dropped_out"
+STATUS_GRADUATED = "graduated"
+
+# Problem Categories
+CATEGORY_FINANCIAL = "financial"
+CATEGORY_FAMILY = "family"
+CATEGORY_HEALTH = "health"
+CATEGORY_ACADEMIC = "academic"
+CATEGORY_SOCIAL = "social"
+CATEGORY_OTHER = "other"
+
+PROBLEM_CATEGORIES = [
+    CATEGORY_FINANCIAL,
+    CATEGORY_FAMILY,
+    CATEGORY_HEALTH,
+    CATEGORY_ACADEMIC,
+    CATEGORY_SOCIAL,
+    CATEGORY_OTHER
+]
+
+# Resource Types
+RESOURCE_SCHOLARSHIP = "scholarship"
+RESOURCE_PROGRAM = "program"
+RESOURCE_ORGANIZATION = "organization"
+RESOURCE_LEGAL = "legal"
+RESOURCE_HEALTH = "health"
+RESOURCE_COUNSELING = "counseling"
+
+RESOURCE_TYPES = [
+    RESOURCE_SCHOLARSHIP,
+    RESOURCE_PROGRAM,
+    RESOURCE_ORGANIZATION,
+    RESOURCE_LEGAL,
+    RESOURCE_HEALTH,
+    RESOURCE_COUNSELING
+]
+
+# Intervention Types
+INTERVENTION_FINANCIAL_AID = "financial_aid"
+INTERVENTION_COUNSELING = "counseling"
+INTERVENTION_ACADEMIC_SUPPORT = "academic_support"
+INTERVENTION_HEALTH_SUPPORT = "health_support"
+INTERVENTION_FAMILY_SUPPORT = "family_support"
+INTERVENTION_OTHER = "other"
+
+INTERVENTION_TYPES = [
+    INTERVENTION_FINANCIAL_AID,
+    INTERVENTION_COUNSELING,
+    INTERVENTION_ACADEMIC_SUPPORT,
+    INTERVENTION_HEALTH_SUPPORT,
+    INTERVENTION_FAMILY_SUPPORT,
+    INTERVENTION_OTHER
+]
+
+# Intervention Status
+INTERVENTION_PENDING = "pending"
+INTERVENTION_IN_PROGRESS = "in_progress"
+INTERVENTION_COMPLETED = "completed"
+INTERVENTION_CANCELLED = "cancelled"
+
+# Attendance Status
+ATTENDANCE_PRESENT = "present"
+ATTENDANCE_ABSENT = "absent"
+ATTENDANCE_LATE = "late"
+ATTENDANCE_EXCUSED = "excused"
+
+# Fee Status
+FEE_PENDING = "pending"
+FEE_PARTIAL = "partial"
+FEE_PAID = "paid"
+FEE_OVERDUE = "overdue"
+
+# Conversation Status
+CONVERSATION_ACTIVE = "active"
+CONVERSATION_RESOLVED = "resolved"
+CONVERSATION_ESCALATED = "escalated"
+
+# Message Roles
+ROLE_USER = "user"
+ROLE_ASSISTANT = "assistant"
+ROLE_SYSTEM = "system"
+
+# Sentiment
+SENTIMENT_POSITIVE = "positive"
+SENTIMENT_NEUTRAL = "neutral"
+SENTIMENT_NEGATIVE = "negative"
+
+# Health Issue Severity
+HEALTH_LOW = "low"
+HEALTH_MEDIUM = "medium"
+HEALTH_HIGH = "high"
+HEALTH_CRITICAL = "critical"
